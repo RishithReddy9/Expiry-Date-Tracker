@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function AddItems({ route }) {
-    const { user } = route.params;
+export default function KEDBarcode() {
     const navigation = useNavigation();
 
     const [hasPermission, setHasPermission] = useState(null);
@@ -22,7 +21,7 @@ export default function AddItems({ route }) {
         setScanned(true);
         setBarcodeData(data);
         console.log(`Bar code scanned! Type: ${type}, Data: ${data}`);
-        navigation.navigate('AddDate', { barcodeData: data, user: user });
+        navigation.navigate('DisplayKED', { barcodeData: data });
     };
 
     if (hasPermission === null) {

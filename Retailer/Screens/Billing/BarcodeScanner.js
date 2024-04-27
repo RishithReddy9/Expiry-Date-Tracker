@@ -2,11 +2,11 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useState, useEffect } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { getProducts } from '../../../sanity';
 
-export default function AddItems({ route }) {
-    const { user } = route.params;
+export default function BillScanning({ route }) {
+    const { scanneditem } = route.params;
     const navigation = useNavigation();
-
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [barcodeData, setBarcodeData] = useState(null);
@@ -18,11 +18,19 @@ export default function AddItems({ route }) {
         })();
     }, []);
 
-    const handleBarCodeScanned = ({ type, data }) => {
+    const handleBarCodeScanned = async ({ type, data }) => {
         setScanned(true);
         setBarcodeData(data);
         console.log(`Bar code scanned! Type: ${type}, Data: ${data}`);
-        navigation.navigate('AddDate', { barcodeData: data, user: user });
+        console.log(scanneditem);
+        const products = await getProducts();
+        products.map(product => {
+            if (product.barcode == data) {
+                scanneditem.push(product)
+            }
+        })
+        navigation.navigate('BottomTabRetailer', { screen: 'Billing', params: { scanneditem: scanneditem } });
+
     };
 
     if (hasPermission === null) {

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Button, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
-import { fetchDataAndAddToSanity } from '../../sanity';
+
 
 export default function AddDate({ route }) {
-    const { barcodeData, user } = route.params;
+    const { barcodeData } = route.params;
     const [date, setDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -33,8 +33,7 @@ export default function AddDate({ route }) {
         if (!errorMessage) {
             console.log('Barcode Data:', barcodeData);
             console.log('Selected Date:', date);
-            fetchDataAndAddToSanity(barcodeData, date, user);
-            navigation.navigate('Main', { user: user });
+            navigation.navigate('RetailerAddQuantity', { barcodeData: barcodeData, date: date });
         }
     };
 

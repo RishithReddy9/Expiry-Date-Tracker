@@ -50,7 +50,7 @@ const AuthScreen = ({ email, setEmail, password, setPassword, isLogin, setIsLogi
 
 const AuthenticatedScreen = ({ user, handleAuthentication }) => {
     const navigation = useNavigation();
-    navigation.navigate('Main')
+    navigation.navigate('Main', { user: user })
     return (
         <View style={styles.authContainer}>
             {/* <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" /> */}
@@ -85,7 +85,6 @@ export default Login = () => {
                     // Sign in
                     await signInWithEmailAndPassword(auth, email, password);
                     console.log('User signed in successfully!');
-                    console.log(auth.currentUser.uid);
                 } else {
                     // Sign up
                     await createUserWithEmailAndPassword(auth, email, password);
@@ -101,7 +100,7 @@ export default Login = () => {
         <ScrollView contentContainerStyle={styles.container}>
             {user ? (
                 // Show user's email if user is authenticated
-                <AuthenticatedScreen user={user} handleAuthentication={handleAuthentication} />
+                <AuthenticatedScreen user={auth.currentUser.uid} handleAuthentication={handleAuthentication} />
             ) : (
                 // Show sign-in or sign-up form if user is not authenticated
                 <AuthScreen
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     logo: {
-        height: 320,
-        width: 270
+        height: 270,
+        width: 250
     }
 });

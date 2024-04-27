@@ -3,13 +3,12 @@ import React from 'react';
 import CardLayout from './CardLayout';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import NotificationComponent from '../../Components/Notifications/NotificationComponent';
 
 
-const Inventory = ({ items, navigation, uid }) => {
+const Inventory = ({ items, navigation }) => {
+
     return (
         <View>
-            <NotificationComponent uid={uid} />
             <View style={styles.container}>
                 {items && items.map(item => (
                     <CardLayout key={item._id} items={item} />

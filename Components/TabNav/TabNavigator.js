@@ -1,22 +1,24 @@
 import React, { useLayoutEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Home from '../../Screens/Home/Home';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/core';
 import { SafeAreaView, View } from 'react-native';
 import RecipeGenerator from '../../Screens/GenerateRecipe/GenerateRecipe';
 import ProfileCard from '../../Screens/Profile/Profile';
-import RecipeCommunity from '../../Screens/RecipeCommunity/RecipeCommunity';
 import UploadPage from '../../Screens/RecipeCommunity/UploadPage';
 import DonateNow from '../../Screens/Donate/DonateNow';
-// import RecipeSuggestionsPage from './RecipeSuggestionsPage';
-// import ProfilePage from './ProfilePage';
-// import RecipeSharingCommunityPage from './RecipeSharingCommunityPage';
+import KED from '../../Retailer/Screens/KED/KED';
+import KEDBarcode from '../../Retailer/Screens/KED/KEDBarcode';
+import ShelfLifePredictor from '../../Screens/ShelfLifePrediction/ShelfLifePrediction';
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
     const navigation = useNavigation();
+    const route = useRoute();
+    const { user } = route.params;
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -34,6 +36,7 @@ const BottomTabNavigator = () => {
                 <Tab.Screen
                     name="Home"
                     component={Home}
+                    initialParams={{ user }}
                     options={{
                         tabBarIcon: ({ color }) => (
                             <MaterialIcons name="home" size={24} color={color} />
@@ -59,11 +62,11 @@ const BottomTabNavigator = () => {
                     }}
                 />
                 <Tab.Screen
-                    name="RecipeCommunity"
-                    component={UploadPage}
+                    name="KED"
+                    component={KEDBarcode}
                     options={{
                         tabBarIcon: ({ color }) => (
-                            <MaterialIcons name="group" size={24} color={color} />
+                            <MaterialIcons name="qr-code-scanner" size={24} color="black" />
                         ),
                     }}
                 />
@@ -73,6 +76,15 @@ const BottomTabNavigator = () => {
                     options={{
                         tabBarIcon: ({ color }) => (
                             <MaterialIcons name="person" size={24} color={color} />
+                        ),
+                    }}
+                />
+                <Tab.Screen
+                    name="ShelfLife Prediction"
+                    component={ShelfLifePredictor}
+                    options={{
+                        tabBarIcon: ({ color }) => (
+                            <MaterialIcons name="online-prediction" size={24} color="black" />
                         ),
                     }}
                 />

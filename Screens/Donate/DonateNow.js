@@ -5,8 +5,8 @@ import * as Location from 'expo-location';
 
 export default function DonateNow() {
     const [mapRegion, setMapRegion] = useState({
-        latitude: 37.78825,
-        longitude: -122.4324,
+        latitude: 17.725958483909587,
+        longitude: 78.25504833115401,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });

@@ -4,22 +4,15 @@ import { useNavigation } from '@react-navigation/core';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Svg, Path } from 'react-native-svg';
 import Inventory from './Inventory';
-import { getItems, getAllMobileNumbers, addUserMobileNumberAndUID } from '../../sanity';
+import { getProducts } from '../../../sanity';
 
-const Home = ({ route }) => {
-    const { user } = route.params;
+const Home = () => {
     const [items, setItems] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [filteredItems, setFilteredItems] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
-    const [isFirstTimeLogin, setIsFirstTimeLogin] = useState(true); // State to track first-time login
     const navigation = useNavigation();
-
-    useEffect(() => {
-        navigation.navigate('Home', { user: user });
-        checkFirstTimeLogin(); // Check if it's the first time login when the component mounts
-    }, []);
 
     useEffect(() => {
         fetchItems();
@@ -34,10 +27,9 @@ const Home = ({ route }) => {
     const fetchItems = async () => {
         try {
             // Fetch items from Sanity
-            const fetchedItems = await getItems();
-            const fetchedItem = fetchedItems.filter(item => item.uid === user);
-            setItems(fetchedItem); // Update state with fetched items
-            setFilteredItems(fetchedItem); // Initially set filtered items to all items
+            const fetchedItems = await getProducts();
+            setItems(fetchedItems); // Update state with fetched items
+            setFilteredItems(fetchedItems); // Initially set filtered items to all items
             setIsLoading(false); // Set loading state to false after data is fetched
         } catch (error) {
             console.error('Error fetching items:', error);
@@ -64,44 +56,10 @@ const Home = ({ route }) => {
         }
     };
 
-    const checkFirstTimeLogin = async () => {
-        try {
-            const uids = await getAllMobileNumbers();
-            const isUserExisting = uids.includes(user);
-            setIsFirstTimeLogin(!isUserExisting);
-            if (!isUserExisting) {
-                // Show the popup dialog box to enter mobile number
-                Alert.prompt(
-                    'First Time Login',
-                    'Please enter your mobile number:',
-                    [
-                        {
-                            text: 'OK',
-                            onPress: (mobileNumber) => {
-                                if (mobileNumber.trim() !== '') {
-                                    // You can handle the logic to save the mobile number here
-                                    addUserMobileNumberAndUID(mobileNumber.trim(), user);
-                                } else {
-                                    // Handle empty input
-                                    console.log('Empty input');
-                                }
-                            }
-                        }
-                    ],
-                    'plain-text',
-                    ''
-                );
-            }
-        } catch (error) {
-            console.error('Error checking first time login:', error);
-        }
-    };
-
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.searchContainer}>
-                <Image source={require('../../logo.png')} style={styles.image} />
+                <Image source={require('../../../logo.png')} style={styles.image} />
                 <View style={styles.inputContainer}>
                     <Svg xmlns="http://www.w3.org/2000/svg" fill="none" width="30" height="30" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                         <Path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
@@ -129,7 +87,7 @@ const Home = ({ route }) => {
                     </View>
                 ) : (
                     filteredItems && filteredItems.length > 0 ? (
-                        <Inventory items={filteredItems} navigation={navigation} uid={user} />
+                        <Inventory items={filteredItems} navigation={navigation} />
                     ) : (
                         <View style={styles.placeholderContainer}>
                             <Text style={{ fontSize: 24 }}>No items found</Text>
@@ -139,7 +97,7 @@ const Home = ({ route }) => {
             </ScrollView>
             <TouchableOpacity
                 style={styles.addButton}
-                onPress={() => navigation.navigate('BarcodeScanner', { user: user })}
+                onPress={() => navigation.navigate('RetailerAddItems')}
             >
                 <Text style={styles.addButtonText}>+</Text>
             </TouchableOpacity>
